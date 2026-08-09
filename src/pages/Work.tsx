@@ -4,6 +4,7 @@ import { ArrowRight, Filter } from 'lucide-react';
 import { fetchProjects } from '../firebase/dataService';
 import { Project } from '../types';
 import { CTASection } from '../components/CTASection';
+import { handleImageError } from '../utils/imageUtils';
 
 export const Work: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -90,7 +91,7 @@ export const Work: React.FC = () => {
                     src={proj.heroImage}
                     alt={proj.title}
                     referrerPolicy="no-referrer"
-                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+                    onError={(e) => handleImageError(e, proj.title || proj.category)}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#071936]/90 text-[10px] uppercase font-semibold text-[#D9A21B] tracking-wider">

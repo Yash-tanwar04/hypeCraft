@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { handleImageError } from '../utils/imageUtils';
 import {
   fetchProjects,
   fetchInsights,
@@ -501,7 +502,7 @@ export const AdminDashboard: React.FC = () => {
                       <img 
                         src={proj.heroImage} 
                         alt={proj.title} 
-                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+                        onError={(e) => handleImageError(e, proj.title || proj.category)}
                         className="w-full h-full object-cover" 
                       />
                     </div>
@@ -617,7 +618,7 @@ export const AdminDashboard: React.FC = () => {
                       <img 
                         src={m.image} 
                         alt={m.name} 
-                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80'; }}
+                        onError={(e) => handleImageError(e, m.name, 'team')}
                         className="w-full h-full object-cover" 
                       />
                     </div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
 import { CTASection } from '../components/CTASection';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { handleImageError } from '../utils/imageUtils';
 
 export const PoliticalPR: React.FC = () => {
   const capabilities = [
@@ -77,7 +78,7 @@ export const PoliticalPR: React.FC = () => {
                 src="/images/political_pr_hero_1786300910145.jpg"
                 alt="Political PR Strategy"
                 referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+                onError={(e) => handleImageError(e, 'Political PR')}
                 className="w-full h-full object-cover"
               />
             </div>

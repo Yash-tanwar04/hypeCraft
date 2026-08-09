@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { CTASection } from '../components/CTASection';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { handleImageError } from '../utils/imageUtils';
 
 export const Branding: React.FC = () => {
   const capabilities = [
@@ -59,7 +60,7 @@ export const Branding: React.FC = () => {
                 src="/images/hypecraft_brand_showcase_1786274760877.jpg"
                 alt="Brand Identity Showcase"
                 referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80'; }}
+                onError={(e) => handleImageError(e, 'Branding')}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -100,7 +101,7 @@ export const Branding: React.FC = () => {
                 src="/images/case_study_branding_1786301009860.jpg"
                 alt="Stationery & Print Mockup"
                 referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80'; }}
+                onError={(e) => handleImageError(e, 'From Identity to Recognition')}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -113,7 +114,7 @@ export const Branding: React.FC = () => {
                 src="/images/graphic_design_hero_1786300960111.jpg"
                 alt="Architectural & Digital Branding"
                 referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+                onError={(e) => handleImageError(e, 'Graphic Design')}
                 className="w-full h-full object-cover"
               />
             </div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, Play } from 'lucide-react';
 import { CTASection } from '../components/CTASection';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { handleImageError } from '../utils/imageUtils';
 
 export const VideoContent: React.FC = () => {
   const capabilities = [
@@ -59,7 +60,7 @@ export const VideoContent: React.FC = () => {
                 src="/images/video_production_hero_1786300944412.jpg"
                 alt="Cinematic Video Production"
                 referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80'; }}
+                onError={(e) => handleImageError(e, 'Video Content')}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-[#071936]/30 flex items-center justify-center">

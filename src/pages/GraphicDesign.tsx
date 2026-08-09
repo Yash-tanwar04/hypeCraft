@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { CTASection } from '../components/CTASection';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { handleImageError } from '../utils/imageUtils';
 
 export const GraphicDesign: React.FC = () => {
   const capabilities = [
@@ -59,7 +60,7 @@ export const GraphicDesign: React.FC = () => {
                 src="/images/graphic_design_hero_1786300960111.jpg"
                 alt="Editorial Graphic Design"
                 referrerPolicy="no-referrer"
-                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80'; }}
+                onError={(e) => handleImageError(e, 'Graphic Design')}
                 className="w-full h-full object-cover"
               />
             </div>

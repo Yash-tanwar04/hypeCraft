@@ -5,6 +5,7 @@ import { fetchProjectBySlug, fetchProjects } from '../firebase/dataService';
 import { Project } from '../types';
 import { CTASection } from '../components/CTASection';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { handleImageError } from '../utils/imageUtils';
 
 export const CaseStudy: React.FC = () => {
   const { projectSlug } = useParams<{ projectSlug: string }>();
@@ -113,7 +114,7 @@ export const CaseStudy: React.FC = () => {
             src={project.heroImage}
             alt={project.title}
             referrerPolicy="no-referrer"
-            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+            onError={(e) => handleImageError(e, project.title || project.category)}
             className="w-full h-full object-cover"
           />
         </div>
@@ -200,7 +201,7 @@ export const CaseStudy: React.FC = () => {
                     src={img}
                     alt={`${project.title} detail ${i + 1}`}
                     referrerPolicy="no-referrer"
-                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80'; }}
+                    onError={(e) => handleImageError(e, project.category || project.title)}
                     className="w-full h-full object-cover"
                   />
                 </div>

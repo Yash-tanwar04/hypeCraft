@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { INITIAL_SERVICES } from '../data/initialData';
 import { CTASection } from '../components/CTASection';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { handleImageError } from '../utils/imageUtils';
 
 export const ServicesOverview: React.FC = () => {
   return (
@@ -51,7 +52,7 @@ export const ServicesOverview: React.FC = () => {
                   src={serv.heroImage}
                   alt={serv.title}
                   referrerPolicy="no-referrer"
-                  onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+                  onError={(e) => handleImageError(e, serv.title)}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
