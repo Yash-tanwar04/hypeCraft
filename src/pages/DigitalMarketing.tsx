@@ -67,6 +67,7 @@ export const DigitalMarketing: React.FC = () => {
                 src="/images/digital_marketing_hero_1786300927065.jpg"
                 alt="Digital Marketing System"
                 referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80'; }}
                 className="w-full h-full object-cover"
               />
             </div>

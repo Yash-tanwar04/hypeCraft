@@ -498,7 +498,12 @@ export const AdminDashboard: React.FC = () => {
                 {projects.map((proj) => (
                   <div key={proj.id || proj.slug} className="bg-white border border-[#E9E9E4] p-5 space-y-4">
                     <div className="aspect-16/10 overflow-hidden bg-[#E9E9E4]">
-                      <img src={proj.heroImage} alt={proj.title} className="w-full h-full object-cover" />
+                      <img 
+                        src={proj.heroImage} 
+                        alt={proj.title} 
+                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                     <div>
                       <span className="text-[10px] text-[#D9A21B] font-bold uppercase">{proj.category} • {proj.year}</span>
@@ -609,7 +614,12 @@ export const AdminDashboard: React.FC = () => {
                 {team.map((m) => (
                   <div key={m.id || m.name} className="bg-white border border-[#E9E9E4] p-5 space-y-3">
                     <div className="aspect-4/3 bg-[#E9E9E4]">
-                      <img src={m.image} alt={m.name} className="w-full h-full object-cover" />
+                      <img 
+                        src={m.image} 
+                        alt={m.name} 
+                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80'; }}
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                     <span className="text-[10px] font-bold text-[#D9A21B] uppercase">{m.role}</span>
                     <h4 className="text-lg font-serif text-[#071936]">{m.name}</h4>

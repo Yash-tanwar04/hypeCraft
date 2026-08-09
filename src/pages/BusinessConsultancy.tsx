@@ -59,6 +59,7 @@ export const BusinessConsultancy: React.FC = () => {
                 src="/images/case_study_warroom_1786301027509.jpg"
                 alt="Business Advisory War Room"
                 referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80'; }}
                 className="w-full h-full object-cover"
               />
             </div>

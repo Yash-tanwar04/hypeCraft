@@ -51,6 +51,7 @@ export const ServicesOverview: React.FC = () => {
                   src={serv.heroImage}
                   alt={serv.title}
                   referrerPolicy="no-referrer"
+                  onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

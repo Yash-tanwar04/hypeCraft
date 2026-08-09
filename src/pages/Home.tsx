@@ -160,6 +160,7 @@ export const Home: React.FC = () => {
                 src="/images/hypecraft_hero_3d_1786274736991.jpg"
                 alt="Hypecraft Strategic Visual"
                 referrerPolicy="no-referrer"
+                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#071936]/50 via-transparent to-transparent pointer-events-none" />
@@ -193,6 +194,7 @@ export const Home: React.FC = () => {
                   src="/images/case_study_warroom_1786301027509.jpg"
                   alt="Hypecraft Strategic War Room"
                   referrerPolicy="no-referrer"
+                  onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80'; }}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -308,6 +310,7 @@ export const Home: React.FC = () => {
                     src={proj.heroImage}
                     alt={proj.title}
                     referrerPolicy="no-referrer"
+                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#071936]/80 backdrop-blur-xs border border-[#FAFAF7]/20 text-[10px] uppercase font-semibold text-[#D9A21B] tracking-wider">

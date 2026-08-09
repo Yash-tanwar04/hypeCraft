@@ -113,6 +113,7 @@ export const CaseStudy: React.FC = () => {
             src={project.heroImage}
             alt={project.title}
             referrerPolicy="no-referrer"
+            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80'; }}
             className="w-full h-full object-cover"
           />
         </div>
@@ -199,6 +200,7 @@ export const CaseStudy: React.FC = () => {
                     src={img}
                     alt={`${project.title} detail ${i + 1}`}
                     referrerPolicy="no-referrer"
+                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80'; }}
                     className="w-full h-full object-cover"
                   />
                 </div>

@@ -48,13 +48,20 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
 }
 
 // Local storage key helpers
-const STORAGE_PROJECTS_KEY = 'hypecraft_projects_v1';
-const STORAGE_INSIGHTS_KEY = 'hypecraft_insights_v1';
+const STORAGE_PROJECTS_KEY = 'hypecraft_projects_v2';
+const STORAGE_INSIGHTS_KEY = 'hypecraft_insights_v2';
 const STORAGE_ENQUIRIES_KEY = 'hypecraft_enquiries_v1';
-const STORAGE_TEAM_KEY = 'hypecraft_team_v1';
+const STORAGE_TEAM_KEY = 'hypecraft_team_v2';
 
 function getLocal<T>(key: string, initial: T[]): T[] {
   try {
+    // Clear legacy v1 keys if present to ensure fresh image paths are used
+    if (key.includes('_v2')) {
+      const oldKey = key.replace('_v2', '_v1');
+      if (localStorage.getItem(oldKey)) {
+        localStorage.removeItem(oldKey);
+      }
+    }
     const data = localStorage.getItem(key);
     if (!data) {
       localStorage.setItem(key, JSON.stringify(initial));

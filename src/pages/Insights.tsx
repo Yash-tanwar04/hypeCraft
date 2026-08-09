@@ -90,6 +90,7 @@ export const Insights: React.FC = () => {
                     src={article.coverImage}
                     alt={article.title}
                     referrerPolicy="no-referrer"
+                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1200&q=80'; }}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#071936]/90 text-[10px] uppercase font-semibold text-[#D9A21B] tracking-wider">
