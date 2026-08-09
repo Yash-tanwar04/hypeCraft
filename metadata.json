@@ -1,0 +1,6 @@
+{
+  "name": "Hypecraft",
+  "description": "Strategic communications, political PR, branding, digital marketing and creative consultancy portfolio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

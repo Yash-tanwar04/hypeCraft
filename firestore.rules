@@ -1,0 +1,39 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Projects: Public read published, Admin full access
+    match /projects/{projectId} {
+      allow read: if resource == null || resource.data.published == true || isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    // Insights: Public read published, Admin full access
+    match /insights/{insightId} {
+      allow read: if resource == null || resource.data.published == true || isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    // Enquiries: Anyone can create, only signed-in admin can read/list/update/delete
+    match /enquiries/{enquiryId} {
+      allow create: if request.resource.data.name is string && request.resource.data.email is string;
+      allow read, update, delete: if isSignedIn();
+    }
+
+    // Team: Public read published, Admin full access
+    match /team/{memberId} {
+      allow read: if resource == null || resource.data.published == true || isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    // Catch-all fallback default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

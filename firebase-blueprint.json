@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "Portfolio case study project entity",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 50 },
+        "year": { "type": "string", "maxLength": 10 },
+        "shortDescription": { "type": "string", "maxLength": 300 },
+        "challenge": { "type": "string", "maxLength": 2000 },
+        "objective": { "type": "string", "maxLength": 2000 },
+        "strategy": { "type": "string", "maxLength": 2000 },
+        "creativeDirection": { "type": "string", "maxLength": 2000 },
+        "execution": { "type": "string", "maxLength": 2000 },
+        "outcome": { "type": "string", "maxLength": 2000 },
+        "heroImage": { "type": "string", "maxLength": 1000 },
+        "galleryImages": { "type": "array" },
+        "tags": { "type": "array" },
+        "featured": { "type": "boolean" },
+        "published": { "type": "boolean" },
+        "isConcept": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["title", "slug", "category", "shortDescription", "published"]
+    },
+    "Insight": {
+      "title": "Insight",
+      "description": "Editorial article and insight piece",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 50 },
+        "excerpt": { "type": "string", "maxLength": 500 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "coverImage": { "type": "string", "maxLength": 1000 },
+        "author": { "type": "string", "maxLength": 100 },
+        "publishedAt": { "type": "string", "maxLength": 50 },
+        "readingTime": { "type": "string", "maxLength": 50 },
+        "tags": { "type": "array" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["title", "slug", "category", "excerpt", "content", "published"]
+    },
+    "Enquiry": {
+      "title": "Enquiry",
+      "description": "Contact form submission from public visitors",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "organization": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "service": { "type": "string", "maxLength": 50 },
+        "projectType": { "type": "string", "maxLength": 100 },
+        "budgetRange": { "type": "string", "maxLength": 50 },
+        "timeline": { "type": "string", "maxLength": 50 },
+        "message": { "type": "string", "maxLength": 3000 },
+        "status": { "type": "string", "maxLength": 30 },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["name", "email", "service", "message"]
+    },
+    "TeamMember": {
+      "title": "TeamMember",
+      "description": "Hypecraft leadership and team profile",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 100 },
+        "bio": { "type": "string", "maxLength": 1000 },
+        "image": { "type": "string", "maxLength": 1000 },
+        "linkedin": { "type": "string", "maxLength": 200 },
+        "displayOrder": { "type": "number" },
+        "published": { "type": "boolean" }
+      },
+      "required": ["name", "role", "published"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Public and admin managed portfolio projects"
+    },
+    "/insights/{insightId}": {
+      "schema": { "$ref": "#/entities/Insight" },
+      "description": "Public and admin managed editorial insights"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": { "$ref": "#/entities/Enquiry" },
+      "description": "Visitor contact enquiries"
+    },
+    "/team/{memberId}": {
+      "schema": { "$ref": "#/entities/TeamMember" },
+      "description": "Team profiles"
+    }
+  }
+}
