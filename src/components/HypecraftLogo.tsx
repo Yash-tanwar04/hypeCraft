@@ -29,6 +29,14 @@ export const HypecraftLogo: React.FC<LogoProps> = ({ className = '', size = 'md'
           src="/logo.png"
           alt="Hypecraft Official Logo"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (target.src.endsWith('/logo.png')) {
+              target.src = '/logo.jpg';
+            } else if (target.src.endsWith('/logo.jpg')) {
+              target.src = '/images/hypecraft_official_logo_1786276054478.jpg';
+            }
+          }}
           className={`${logoHeights[size]} w-auto object-contain block`}
         />
       </div>
