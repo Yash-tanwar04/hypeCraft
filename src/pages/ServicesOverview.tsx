@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import { INITIAL_SERVICES } from '../data/initialData';
 import { WalkingCharacter } from '../components/WalkingCharacter';
 import { handleImageError } from '../utils/imageUtils';
@@ -70,6 +71,10 @@ export const ServicesOverview: React.FC = () => {
   const billboardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastProgressRef = useRef<number>(0);
 
+  const activeStepRef = useRef<number>(0);
+  const isReversedRef = useRef<boolean>(false);
+  const rafIdRef = useRef<number | null>(null);
+
   const [activeStep, setActiveStep] = useState<number>(0);
   const [journeyProgress, setJourneyProgress] = useState<number>(0);
   const [isReversed, setIsReversed] = useState<boolean>(false);
@@ -92,8 +97,8 @@ export const ServicesOverview: React.FC = () => {
       const nextEl = refs[index + 1] || refs[index];
 
       if (currentEl && nextEl) {
-        const startX = currentEl.offsetLeft + 40;
-        const endX = nextEl.offsetLeft + 40;
+        const startX = currentEl.offsetLeft + 60;
+        const endX = nextEl.offsetLeft + 60;
         return startX + (endX - startX) * segmentProg;
       }
     }
@@ -102,6 +107,38 @@ export const ServicesOverview: React.FC = () => {
     const trackWidth = trackRef.current ? trackRef.current.scrollWidth : 3500;
     return 150 + prog * (trackWidth - 400);
   };
+
+  // Distance-based character opacity:
+  // Character smoothly fades out when arriving in front of a billboard card center,
+  // remains hidden while card is active, and fades back in when leaving towards the next card.
+  const getCharacterOpacity = (prog: number) => {
+    const charX = getCharacterPositionPx(prog);
+    const refs = billboardRefs.current;
+
+    if (!refs || refs.length === 0) return 1;
+
+    let minDist = Infinity;
+    for (let i = 0; i < refs.length; i++) {
+      const el = refs[i];
+      if (el) {
+        const cardCenter = el.offsetLeft + el.offsetWidth / 2;
+        const dist = Math.abs(charX - cardCenter);
+        if (dist < minDist) {
+          minDist = dist;
+        }
+      }
+    }
+
+    // Fully hidden when in front of card (minDist <= 160px)
+    // Fully visible when walking between cards (minDist >= 360px)
+    // Smooth linear interpolation in between
+    if (minDist <= 160) return 0;
+    if (minDist >= 360) return 1;
+    return (minDist - 160) / (360 - 160);
+  };
+
+  const characterOpacity = getCharacterOpacity(journeyProgress);
+  const isLookingAtBillboard = characterOpacity < 0.8;
 
   // Accessibility check for reduced motion
   useEffect(() => {
@@ -112,42 +149,34 @@ export const ServicesOverview: React.FC = () => {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  // Calculate character visibility and focus state based on 6-phase timeline cycle per billboard
-  // Phase A: Approach (visible = 1)
-  // Phase B: Enter (visible = 1)
-  // Phase C: Focus (active billboard) -> Fade Out (opacity 1 -> 0)
-  // Phase D: Hold (active content reading) -> Hidden (opacity 0)
-  // Phase E: Exit (next billboard entering)
-  // Phase F: Reappear -> Fade In (opacity 0 -> 1)
-  const getCharacterState = (prog: number) => {
-    const totalServices = INITIAL_SERVICES.length; // 6
-    const slotFloat = prog * totalServices;
-    const currentSlot = Math.floor(slotFloat);
-    const slotProg = slotFloat - currentSlot; // 0.0 to 1.0 within current service slot
+  // Initialize Lenis Smooth Scroll synced with GSAP Ticker & ScrollTrigger
+  useEffect(() => {
+    if (prefersReducedMotion) return;
 
-    let opacity = 1;
-    let isLooking = true;
+    // Prevent jumpy page resizes when mobile address bars expand/collapse
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
-    if (slotProg >= 0.28 && slotProg < 0.42) {
-      // Phase C: Focus - Fade out (1 -> 0)
-      opacity = 1 - (slotProg - 0.28) / (0.42 - 0.28);
-    } else if (slotProg >= 0.42 && slotProg < 0.60) {
-      // Phase D: Hold - Hidden while content is active
-      opacity = 0;
-    } else if (slotProg >= 0.60 && slotProg < 0.74) {
-      // Phase F: Reappear - Fade in (0 -> 1)
-      opacity = (slotProg - 0.60) / (0.74 - 0.60);
-    } else {
-      // Phase A / B / Next Approach - Fully visible
-      opacity = 1;
-    }
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 1.8,
+      infinite: false,
+    });
 
-    opacity = Math.max(0, Math.min(1, opacity));
-    return { opacity, isLooking };
-  };
+    lenis.on('scroll', ScrollTrigger.update);
 
-  const { opacity: characterOpacity, isLooking: isLookingAtBillboard } =
-    getCharacterState(journeyProgress);
+    const updateLenis = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(updateLenis);
+      lenis.destroy();
+    };
+  }, [prefersReducedMotion]);
 
   // GSAP ScrollTrigger for Pinned Services Journey
   useEffect(() => {
@@ -159,63 +188,78 @@ export const ServicesOverview: React.FC = () => {
 
     let ctx = gsap.context(() => {
       const totalServices = INITIAL_SERVICES.length;
-      // Distance to scrub: ~800px per service + extra buffer
-      const scrollDistance = totalServices * 850 + 600;
+      // Distance to scrub: ~800px per service
+      const isMobile = window.innerWidth < 768;
+      const scrollDistance = totalServices * (isMobile ? 650 : 850) + 400;
 
       ScrollTrigger.create({
         trigger: journeyEl,
         start: 'top top',
         end: `+=${scrollDistance}`,
         pin: true,
-        scrub: 0.8,
+        scrub: isMobile ? 0.4 : 0.6,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           const prog = self.progress;
 
-          // Character orientation flip when scrolling up
-          if (prog < lastProgressRef.current - 0.001) {
-            setIsReversed(true);
-          } else if (prog > lastProgressRef.current + 0.001) {
-            setIsReversed(false);
-          }
-          lastProgressRef.current = prog;
-
-          setJourneyProgress(prog);
-
-          // Calculate active step index (0 to 5)
-          const stepIndex = Math.min(
-            totalServices - 1,
-            Math.floor(prog * totalServices)
-          );
-          setActiveStep(stepIndex);
-
-          // Scroll horizontal track
+          // 1. Instantly update GSAP track translation on GPU thread for 60fps responsiveness
           const maxScroll = trackEl.scrollWidth - window.innerWidth;
           gsap.set(trackEl, {
             x: -prog * maxScroll,
+            force3D: true,
           });
+
+          // 2. Batch React state updates using rAF to avoid state thrashing on touch move
+          if (rafIdRef.current === null) {
+            rafIdRef.current = requestAnimationFrame(() => {
+              rafIdRef.current = null;
+
+              // Direction check
+              const isRev = prog < lastProgressRef.current - 0.0008;
+              if (isRev !== isReversedRef.current) {
+                isReversedRef.current = isRev;
+                setIsReversed(isRev);
+              }
+              lastProgressRef.current = prog;
+
+              // Active step check
+              const stepIndex = Math.min(
+                totalServices - 1,
+                Math.floor(prog * totalServices)
+              );
+              if (stepIndex !== activeStepRef.current) {
+                activeStepRef.current = stepIndex;
+                setActiveStep(stepIndex);
+              }
+
+              setJourneyProgress(prog);
+            });
+          }
         },
       });
 
       // Subtle parallax on far skyline background
       gsap.to('.parallax-bg-far', {
-        xPercent: -25,
+        xPercent: -20,
         ease: 'none',
         scrollTrigger: {
           trigger: journeyEl,
           start: 'top top',
           end: `+=${scrollDistance}`,
-          scrub: 1,
+          scrub: isMobile ? 0.4 : 0.8,
         },
       });
     }, journeyEl);
 
     // Refresh ScrollTrigger when images load
-    const timer = setTimeout(() => ScrollTrigger.refresh(), 500);
+    const timer = setTimeout(() => ScrollTrigger.refresh(), 400);
 
     return () => {
       clearTimeout(timer);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
       ctx.revert();
     };
   }, [prefersReducedMotion]);
@@ -401,10 +445,10 @@ export const ServicesOverview: React.FC = () => {
         {/* STREET SCENE HORIZONTAL TRACK */}
         <div
           ref={trackRef}
-          className="relative h-full flex items-center pl-[15vw] pr-[25vw] min-w-max transition-transform duration-75 ease-out"
+          className="relative h-full flex items-center pl-[15vw] pr-[25vw] min-w-max will-change-transform transform-gpu"
         >
           {/* FAR PARALLAX SKYLINE ARCHITECTURE */}
-          <div className="parallax-bg-far absolute top-12 left-0 right-0 h-2/3 pointer-events-none opacity-20 flex items-end">
+          <div className="parallax-bg-far absolute top-12 left-0 right-0 h-2/3 pointer-events-none opacity-20 flex items-end will-change-transform transform-gpu">
             <svg
               className="w-[300vw] h-full"
               viewBox="0 0 2400 600"
@@ -419,7 +463,7 @@ export const ServicesOverview: React.FC = () => {
           </div>
 
           {/* MIDGROUND STREET WALL PATTERN */}
-          <div className="absolute bottom-0 left-0 right-0 h-[80%] pointer-events-none flex items-end">
+          <div className="absolute bottom-0 left-0 right-0 h-[80%] pointer-events-none flex items-end will-change-transform transform-gpu">
             <div className="w-[350vw] h-full bg-[#071936]/10 border-b border-[#D9A21B]/20 relative">
               <div
                 className="absolute inset-0 opacity-15"
@@ -445,7 +489,7 @@ export const ServicesOverview: React.FC = () => {
                   ref={(el) => {
                     billboardRefs.current[index] = el;
                   }}
-                  className={`relative shrink-0 w-[85vw] max-w-[760px] md:w-[680px] lg:w-[740px] bg-[#071936] text-[#FAFAF7] border-2 border-[#D9A21B]/40 shadow-2xl rounded-xs overflow-hidden transition-all duration-500 transform ${
+                  className={`relative shrink-0 w-[85vw] max-w-[760px] md:w-[680px] lg:w-[740px] bg-[#071936] text-[#FAFAF7] border-2 border-[#D9A21B]/40 shadow-2xl rounded-xs overflow-hidden transition-all duration-500 transform will-change-transform transform-gpu ${
                     isActive
                       ? 'scale-100 opacity-100 translate-y-0 border-[#D9A21B] shadow-[0_20px_50px_rgba(217,162,27,0.3)]'
                       : 'scale-95 opacity-50 translate-y-4 filter grayscale-[30%]'
@@ -536,7 +580,7 @@ export const ServicesOverview: React.FC = () => {
 
             {/* WALKING CHARACTER - PROGRESSES HORIZONTALLY IN SYNC WITH USER SCROLL */}
             <div
-              className="absolute bottom-12 z-30 transition-opacity duration-300 ease-out"
+              className="absolute bottom-12 z-30 transition-opacity duration-300 ease-out will-change-[transform,opacity] transform-gpu"
               style={{
                 left: `${getCharacterPositionPx(journeyProgress)}px`,
                 opacity: characterOpacity,

@@ -48,7 +48,7 @@ export const WalkingCharacter: React.FC<WalkingCharacterProps> = ({
 
   return (
     <div
-      className={`relative pointer-events-none select-none transition-transform duration-75 ${className}`}
+      className={`relative pointer-events-none select-none will-change-transform transform-gpu ${className}`}
       style={{
         transform: `translateY(${-verticalBob}px) ${isReversed ? 'scaleX(-1)' : 'scaleX(1)'}`,
       }}
