@@ -31,10 +31,10 @@ export const CTASection: React.FC = () => {
           </Link>
           
           <Link
-            to="/work"
+            to="/services"
             className="inline-flex items-center gap-2 px-8 py-4 border border-[#FAFAF7]/20 text-[#FAFAF7] text-xs font-semibold tracking-[0.18em] uppercase hover:border-[#D9A21B] hover:text-[#D9A21B] transition-all duration-300"
           >
-            <span>View Our Work</span>
+            <span>Explore Services</span>
           </Link>
         </div>
 

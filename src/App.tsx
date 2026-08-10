@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -52,8 +52,8 @@ export default function App() {
               <Route path="/services/graphic-design" element={<GraphicDesign />} />
               <Route path="/services/business-consultancy" element={<BusinessConsultancy />} />
               
-              {/* Work */}
-              <Route path="/work" element={<Work />} />
+              {/* Redirect /work to /services as requested */}
+              <Route path="/work" element={<Navigate to="/services" replace />} />
               <Route path="/work/:projectSlug" element={<CaseStudy />} />
               
               {/* Insights */}

@@ -55,10 +55,10 @@ export const CaseStudy: React.FC = () => {
           The requested project case study could not be located or has been archived.
         </p>
         <Link
-          to="/work"
+          to="/services"
           className="inline-flex items-center gap-2 px-6 py-3 bg-[#071936] text-[#FAFAF7] text-xs uppercase font-bold tracking-widest hover:bg-[#D9A21B] transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" /> Return to Work
+          <ArrowLeft className="w-4 h-4" /> Return to Services
         </Link>
       </div>
     );
@@ -70,20 +70,20 @@ export const CaseStudy: React.FC = () => {
       {/* GO BACK & BREADCRUMB */}
       <PageBreadcrumb
         items={[
-          { label: 'Work', path: '/work' },
+          { label: 'Services', path: '/services' },
           { label: project.title }
         ]}
-        backToLabel="Selected Work"
-        backToPath="/work"
+        backToLabel="Services Overview"
+        backToPath="/services"
       />
 
       {/* HEADER & METADATA */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 space-y-8">
         <Link
-          to="/work"
+          to="/services"
           className="inline-flex items-center gap-2 text-xs font-semibold text-[#071936]/60 hover:text-[#D9A21B] transition-colors uppercase tracking-wider"
         >
-          <ArrowLeft className="w-3.5 h-3.5" /> Back to Selected Work
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to Services Overview
         </Link>
 
         <div className="space-y-4">

@@ -138,10 +138,10 @@ export const Home: React.FC = () => {
 
             <div className="pt-2 flex flex-wrap items-center gap-6">
               <Link
-                to="/work"
+                to="/services"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-[#071936] text-white text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-[#D9A21B] hover:text-[#071936] transition-all duration-300 group"
               >
-                <span>Explore Our Work</span>
+                <span>Explore Services</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
 
@@ -278,83 +278,11 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 04: SELECTED WORK */}
-      <section className="py-24 bg-[#071936] text-[#FAFAF7]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-12">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#FAFAF7]/10 pb-8">
-            <div className="space-y-3">
-              <p className="text-[#D9A21B] text-xs font-semibold tracking-[0.25em] uppercase">
-                03 / SELECTED WORK
-              </p>
-              <h2 className="text-3xl md:text-5xl font-serif text-white">
-                Work that speaks <span className="italic text-[#D9A21B]">beyond the brief.</span>
-              </h2>
-            </div>
-            <Link
-              to="/work"
-              className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.18em] uppercase text-[#D9A21B] hover:text-white transition-colors"
-            >
-              <span>View All Projects</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((proj) => (
-              <div
-                key={proj.id || proj.slug}
-                className="group bg-[#040e21] border border-[#FAFAF7]/10 hover:border-[#D9A21B] transition-all duration-300 flex flex-col overflow-hidden"
-              >
-                <div className="relative aspect-16/10 overflow-hidden bg-[#071936]">
-                  <img
-                    src={proj.heroImage}
-                    alt={proj.title}
-                    referrerPolicy="no-referrer"
-                    onError={(e) => handleImageError(e, proj.title || proj.category)}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#071936]/80 backdrop-blur-xs border border-[#FAFAF7]/20 text-[10px] uppercase font-semibold text-[#D9A21B] tracking-wider">
-                    {proj.isConcept ? 'Concept Project' : 'Selected Project'}
-                  </div>
-                </div>
-
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px] text-[#D9A21B] tracking-wider">
-                      <span>{proj.category}</span>
-                      <span>{proj.year}</span>
-                    </div>
-                    <h3 className="text-lg font-serif text-white group-hover:text-[#D9A21B] transition-colors">
-                      {proj.title}
-                    </h3>
-                    <p className="text-xs text-[#FAFAF7]/70 font-sans line-clamp-2 leading-relaxed">
-                      {proj.shortDescription}
-                    </p>
-                  </div>
-
-                  <div className="pt-2">
-                    <Link
-                      to={`/work/${proj.slug}`}
-                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#D9A21B] group-hover:text-white transition-colors"
-                    >
-                      <span>Explore Case Study</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* SECTION 05: HOW WE THINK / OUR APPROACH */}
+      {/* SECTION 04: HOW WE THINK / OUR APPROACH */}
       <section className="py-24 max-w-7xl mx-auto px-6 md:px-12">
         <div className="space-y-4 mb-16">
           <p className="text-[#D9A21B] text-xs font-semibold tracking-[0.25em] uppercase">
-            04 / OUR APPROACH
+            03 / OUR APPROACH
           </p>
           <h2 className="text-3xl md:text-5xl font-serif text-[#071936]">
             Strategy <span className="italic text-[#D9A21B]">before noise.</span>

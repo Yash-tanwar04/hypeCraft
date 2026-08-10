@@ -1,3 +1,5 @@
+import type React from 'react';
+
 // Smart fallback image utility tailored specifically to categories, titles, and roles
 
 export const CATEGORY_FALLBACK_IMAGES: Record<string, string> = {

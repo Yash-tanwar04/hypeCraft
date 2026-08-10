@@ -29,7 +29,6 @@ export const Navbar: React.FC = () => {
     { name: 'HOME', path: '/' },
     { name: 'ABOUT', path: '/about' },
     { name: 'SERVICES', path: '/services' },
-    { name: 'WORK', path: '/work' },
     { name: 'INSIGHTS', path: '/insights' },
     { name: 'CONTACT', path: '/contact' },
   ];
@@ -39,28 +38,37 @@ export const Navbar: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
+  // Determine if the current page has a dark background
+  const isDarkPage = location.pathname === '/services';
+
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#FAFAF7]/90 backdrop-blur-md py-3 shadow-xs border-b border-[#E9E9E4]'
+            ? isDarkPage
+              ? 'bg-[#071936]/90 backdrop-blur-md py-3 shadow-md border-b border-[#FAFAF7]/10'
+              : 'bg-[#FAFAF7]/90 backdrop-blur-md py-3 shadow-xs border-b border-[#E9E9E4]'
             : 'bg-transparent py-6'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
           <Link to="/" className="group flex items-center gap-2">
-            <HypecraftLogo size="md" />
+            <HypecraftLogo size="md" dark={isDarkPage} />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold tracking-[0.15em] text-[#071936]">
+          <nav className="hidden lg:flex items-center space-x-8 text-xs font-semibold tracking-[0.15em]">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`relative py-1 transition-colors duration-200 hover:text-[#D9A21B] ${
-                  isActive(link.path) ? 'text-[#D9A21B]' : 'text-[#071936]'
+                  isActive(link.path)
+                    ? 'text-[#D9A21B]'
+                    : isDarkPage
+                    ? 'text-[#FAFAF7]/90 hover:text-[#D9A21B]'
+                    : 'text-[#071936] hover:text-[#D9A21B]'
                 }`}
               >
                 {link.name}
@@ -72,17 +80,25 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Action CTA */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#D9A21B] text-[#071936] text-xs font-semibold tracking-wider hover:bg-[#D9A21B] hover:text-white transition-all duration-300 group"
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#D9A21B] text-xs font-semibold tracking-wider transition-all duration-300 group ${
+                isDarkPage
+                  ? 'text-[#FAFAF7] hover:bg-[#D9A21B] hover:text-[#071936]'
+                  : 'text-[#071936] hover:bg-[#D9A21B] hover:text-white'
+              }`}
             >
               <span>LET'S TALK</span>
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#D9A21B] group-hover:text-white" />
+              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#D9A21B] group-hover:text-current" />
             </Link>
             <Link
               to="/contact"
-              className="w-10 h-10 border border-[#D9A21B] rounded-full flex items-center justify-center text-[#D9A21B] hover:bg-[#D9A21B] hover:text-[#071936] transition-all duration-300 text-sm font-semibold cursor-pointer"
+              className={`w-10 h-10 border border-[#D9A21B] rounded-full flex items-center justify-center transition-all duration-300 text-sm font-semibold cursor-pointer ${
+                isDarkPage
+                  ? 'text-[#D9A21B] hover:bg-[#D9A21B] hover:text-[#071936]'
+                  : 'text-[#D9A21B] hover:bg-[#D9A21B] hover:text-white'
+              }`}
             >
               ↗
             </Link>
@@ -91,7 +107,9 @@ export const Navbar: React.FC = () => {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#071936] hover:text-[#D9A21B] transition-colors"
+            className={`lg:hidden p-2 transition-colors ${
+              isDarkPage ? 'text-white hover:text-[#D9A21B]' : 'text-[#071936] hover:text-[#D9A21B]'
+            }`}
             aria-label="Toggle Navigation"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
