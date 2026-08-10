@@ -18,6 +18,7 @@ import { INITIAL_SERVICES } from '../data/initialData';
 import { WalkingCharacter } from '../components/WalkingCharacter';
 import { handleImageError } from '../utils/imageUtils';
 import { PageBreadcrumb } from '../components/PageBreadcrumb';
+import { CitySkyline } from '../components/CitySkyline';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -447,34 +448,8 @@ export const ServicesOverview: React.FC = () => {
           ref={trackRef}
           className="relative h-full flex items-center pl-[15vw] pr-[25vw] min-w-max will-change-transform transform-gpu"
         >
-          {/* FAR PARALLAX SKYLINE ARCHITECTURE */}
-          <div className="parallax-bg-far absolute top-12 left-0 right-0 h-2/3 pointer-events-none opacity-20 flex items-end will-change-transform transform-gpu">
-            <svg
-              className="w-[300vw] h-full"
-              viewBox="0 0 2400 600"
-              preserveAspectRatio="none"
-              fill="currentColor"
-            >
-              <path d="M0,600 L0,320 L120,320 L120,280 L180,220 L240,280 L240,320 L380,320 L380,180 L440,120 L500,180 L500,320 L750,320 L750,240 L820,240 L820,600 Z" opacity="0.4" />
-              <path d="M800,600 L800,200 L920,200 L920,150 L980,80 L1040,150 L1040,200 L1200,200 L1200,600 Z" opacity="0.6" />
-              <path d="M1250,600 L1250,260 L1400,260 L1400,190 L1460,130 L1520,190 L1520,260 L1700,260 L1700,600 Z" opacity="0.5" />
-              <path d="M1750,600 L1750,220 L1900,220 L1900,140 L1980,70 L2060,140 L2060,220 L2300,220 L2300,600 Z" opacity="0.6" />
-            </svg>
-          </div>
-
-          {/* MIDGROUND STREET WALL PATTERN */}
-          <div className="absolute bottom-0 left-0 right-0 h-[80%] pointer-events-none flex items-end will-change-transform transform-gpu">
-            <div className="w-[350vw] h-full bg-[#071936]/10 border-b border-[#D9A21B]/20 relative">
-              <div
-                className="absolute inset-0 opacity-15"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(to right, #D9A21B 1px, transparent 1px), linear-gradient(to bottom, #D9A21B 1px, transparent 1px)',
-                  backgroundSize: '90px 120px',
-                }}
-              />
-            </div>
-          </div>
+          {/* HIGH-DETAIL CITYSCAPE & URBAN ARCHITECTURE BACKGROUND */}
+          <CitySkyline />
 
           {/* THE 6 PHYSICAL BILLBOARDS ALONG THE STREET */}
           <div className="relative z-10 flex items-center space-x-[25vw] md:space-x-[32vw] pt-12">
