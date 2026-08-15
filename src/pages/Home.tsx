@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown } from 'lucide-react';
 import { CTASection } from '../components/CTASection';
+import { HomePartnersPreview } from '../components/HomePartnersPreview';
 import { fetchProjects } from '../firebase/dataService';
 import { Project } from '../types';
 import { handleImageError } from '../utils/imageUtils';
@@ -305,6 +306,9 @@ export const Home: React.FC = () => {
           ))}
         </div>
       </section>
+
+      {/* SECTION 05: OUR PARTNERS (COMPACT PREVIEW) */}
+      <HomePartnersPreview />
 
       {/* SECTION 06: FINAL CTA */}
       <CTASection />

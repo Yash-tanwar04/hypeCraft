@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'r
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { WhatsAppButton } from './components/WhatsAppButton';
 
 // Pages
 import { Home } from './pages/Home';
@@ -19,6 +20,7 @@ import { CaseStudy } from './pages/CaseStudy';
 import { Insights } from './pages/Insights';
 import { Article } from './pages/Article';
 import { Contact } from './pages/Contact';
+import { Partners } from './pages/Partners';
 import { Legal } from './pages/Legal';
 import { AdminLogin, AdminDashboard } from './pages/AdminPages';
 
@@ -61,6 +63,7 @@ export default function App() {
               <Route path="/insights/:articleSlug" element={<Article />} />
               
               {/* Contact & Legal */}
+              <Route path="/partners" element={<Partners />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Legal />} />
               <Route path="/terms" element={<Legal />} />
@@ -72,6 +75,7 @@ export default function App() {
           </main>
 
           <Footer />
+          <WhatsAppButton />
         </div>
       </Router>
     </AuthProvider>

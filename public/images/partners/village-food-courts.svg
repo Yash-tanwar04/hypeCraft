@@ -1,0 +1,14 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="94" stroke="#18181B" stroke-width="2.5" stroke-dasharray="4 4" />
+  <circle cx="100" cy="100" r="88" stroke="#18181B" stroke-width="3" />
+  <circle cx="100" cy="100" r="68" fill="#18181B" />
+  <path id="vfc-arch" d="M 36 68 A 75 75 0 0 1 164 68" fill="none" />
+  <text font-size="9" font-family="'Inter', sans-serif" font-weight="800" fill="#18181B" letter-spacing="2.5">
+    <textPath href="#vfc-arch" startOffset="50%" text-anchor="middle">
+      VILLAGE FOOD COURTS
+    </textPath>
+  </text>
+  <text x="100" y="118" text-anchor="middle" fill="#FAFAF7" font-family="'Inter', 'Arial Black', sans-serif" font-size="44" font-weight="900" letter-spacing="-1.5">
+    vfc
+  </text>
+</svg>

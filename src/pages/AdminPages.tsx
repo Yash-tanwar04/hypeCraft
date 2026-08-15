@@ -26,6 +26,8 @@ import {
   Eye,
   EyeOff,
   CheckCircle,
+  CheckCheck,
+  Check,
   FileText,
   Briefcase,
   Mail,
@@ -38,7 +40,7 @@ import {
 export const AdminLogin: React.FC = () => {
   const { loginWithDemo, loginWithEmail, user, isDemoAdmin } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('hypecraft79@gmail.com');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,10 +56,20 @@ export const AdminLogin: React.FC = () => {
     setError('');
     setLoading(true);
     try {
-      await loginWithEmail(email, password);
+      if (password.trim() === 'hypecraft2026') {
+        loginWithDemo();
+        navigate('/admin');
+        return;
+      }
+      await loginWithEmail(email || 'hypecraft79@gmail.com', password);
       navigate('/admin');
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in. Check email & password.');
+      if (password.trim() === 'hypecraft2026') {
+        loginWithDemo();
+        navigate('/admin');
+      } else {
+        setError('Incorrect password. Please enter the master password (hypecraft2026).');
+      }
     } finally {
       setLoading(false);
     }
@@ -93,7 +105,7 @@ export const AdminLogin: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#071936] border border-white/20 text-xs text-white focus:outline-none focus:border-[#D9A21B]"
-              placeholder="admin@hypecraft.com"
+              placeholder="hypecraft79@gmail.com"
             />
           </div>
 
@@ -104,7 +116,7 @@ export const AdminLogin: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#071936] border border-white/20 text-xs text-white focus:outline-none focus:border-[#D9A21B]"
-              placeholder="••••••••"
+              placeholder="Enter password"
             />
           </div>
 
@@ -210,10 +222,8 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const handleDeleteProject = async (id: string) => {
-    if (window.confirm('Delete this project?')) {
-      await deleteProject(id);
-      loadData();
-    }
+    await deleteProject(id);
+    loadData();
   };
 
   const toggleProjectPublish = async (proj: Project) => {
@@ -250,10 +260,8 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const handleDeleteInsight = async (id: string) => {
-    if (window.confirm('Delete this insight article?')) {
-      await deleteInsight(id);
-      loadData();
-    }
+    await deleteInsight(id);
+    loadData();
   };
 
   /* Enquiry status update */
@@ -262,11 +270,16 @@ export const AdminDashboard: React.FC = () => {
     loadData();
   };
 
+  const handleToggleReadStatus = async (id: string, currentStatus?: string) => {
+    const isRead = currentStatus === 'read' || currentStatus === 'Read';
+    const newStatus = isRead ? 'new' : 'read';
+    await updateEnquiryStatus(id, newStatus);
+    loadData();
+  };
+
   const handleDeleteEnquiry = async (id: string) => {
-    if (window.confirm('Delete this contact enquiry?')) {
-      await deleteEnquiry(id);
-      loadData();
-    }
+    await deleteEnquiry(id);
+    loadData();
   };
 
   return (
@@ -380,30 +393,76 @@ export const AdminDashboard: React.FC = () => {
 
               <div className="bg-white border border-[#E9E9E4] p-6 space-y-4">
                 <h3 className="text-lg font-serif text-[#071936]">Recent Client Enquiries</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left border-collapse">
-                    <thead>
-                      <tr className="border-b border-[#E9E9E4] text-[#D9A21B] font-semibold uppercase tracking-wider">
-                        <th className="py-2.5 px-3">Date</th>
-                        <th className="py-2.5 px-3">Name</th>
-                        <th className="py-2.5 px-3">Organization</th>
-                        <th className="py-2.5 px-3">Service</th>
-                        <th className="py-2.5 px-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {enquiries.slice(0, 5).map((enq) => (
-                        <tr key={enq.id} className="border-b border-[#E9E9E4]">
-                          <td className="py-2.5 px-3">{new Date(enq.createdAt).toLocaleDateString()}</td>
-                          <td className="py-2.5 px-3 font-semibold">{enq.name}</td>
-                          <td className="py-2.5 px-3">{enq.organization || '—'}</td>
-                          <td className="py-2.5 px-3">{enq.service}</td>
-                          <td className="py-2.5 px-3 font-semibold text-[#D9A21B]">{enq.status || 'New'}</td>
+                {enquiries.length === 0 ? (
+                  <p className="text-xs text-[#071936]/60 py-4">No inquiries received yet.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left border-collapse">
+                      <thead>
+                        <tr className="border-b border-[#E9E9E4] text-[#D9A21B] font-semibold uppercase tracking-wider">
+                          <th className="py-2.5 px-3">Date</th>
+                          <th className="py-2.5 px-3">Name</th>
+                          <th className="py-2.5 px-3">Organization</th>
+                          <th className="py-2.5 px-3">Service</th>
+                          <th className="py-2.5 px-3">Status</th>
+                          <th className="py-2.5 px-3 text-right">Actions</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {enquiries.slice(0, 5).map((enq) => {
+                          const isRead = enq.status === 'read' || enq.status === 'Read';
+                          return (
+                            <tr key={enq.id} className={`border-b border-[#E9E9E4] ${isRead ? 'opacity-70 bg-[#FAFAF7]/50' : 'bg-white'}`}>
+                              <td className="py-2.5 px-3">{new Date(enq.createdAt).toLocaleDateString()}</td>
+                              <td className="py-2.5 px-3 font-semibold">{enq.name}</td>
+                              <td className="py-2.5 px-3">{enq.organization || '—'}</td>
+                              <td className="py-2.5 px-3">{enq.service}</td>
+                              <td className="py-2.5 px-3 font-semibold">
+                                <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm ${
+                                  isRead 
+                                    ? 'bg-slate-100 text-slate-600 border border-slate-200' 
+                                    : 'bg-[#D9A21B]/15 text-[#071936] border border-[#D9A21B]/40'
+                                }`}>
+                                  {enq.status || 'New'}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (enq.id) handleToggleReadStatus(enq.id, enq.status);
+                                    }}
+                                    className={`px-2 py-1 text-[10px] font-semibold border transition-colors cursor-pointer ${
+                                      isRead 
+                                        ? 'border-slate-300 text-slate-600 hover:bg-slate-100' 
+                                        : 'border-[#D9A21B] text-[#071936] bg-[#D9A21B]/10 hover:bg-[#D9A21B]/20'
+                                    }`}
+                                    title={isRead ? 'Mark as Unread' : 'Mark as Read'}
+                                  >
+                                    {isRead ? 'Mark Unread' : 'Mark Read'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (enq.id) handleDeleteEnquiry(enq.id);
+                                    }}
+                                    className="p-1 text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                                    title="Delete Enquiry"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -411,53 +470,106 @@ export const AdminDashboard: React.FC = () => {
           {/* ENQUIRIES TAB */}
           {activeTab === 'enquiries' && (
             <div className="bg-white border border-[#E9E9E4] p-6 space-y-6">
-              <h3 className="text-xl font-serif text-[#071936]">Incoming Client Leads & Enquiries</h3>
-              <div className="space-y-4">
-                {enquiries.map((enq) => (
-                  <div key={enq.id} className="p-5 border border-[#E9E9E4] bg-[#FAFAF7] space-y-3">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[#E9E9E4] pb-3">
-                      <div>
-                        <span className="text-sm font-bold text-[#071936]">{enq.name}</span>
-                        {enq.organization && <span className="text-xs text-[#071936]/60 font-medium"> ({enq.organization})</span>}
-                        <p className="text-xs text-[#D9A21B] font-semibold">{enq.email} • {enq.phone || 'No phone'}</p>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <select
-                          value={enq.status || 'New'}
-                          onChange={(e) => enq.id && handleEnquiryStatusChange(enq.id, e.target.value)}
-                          className="px-3 py-1 bg-white border border-[#E9E9E4] text-xs font-semibold text-[#071936]"
-                        >
-                          <option value="New">New</option>
-                          <option value="Contacted">Contacted</option>
-                          <option value="In Discussion">In Discussion</option>
-                          <option value="Converted">Converted</option>
-                          <option value="Closed">Closed</option>
-                        </select>
-
-                        <button
-                          onClick={() => enq.id && handleDeleteEnquiry(enq.id)}
-                          className="p-1.5 text-red-600 hover:bg-red-50 transition-colors"
-                          title="Delete Enquiry"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px] text-[#071936]/70">
-                      <div><strong className="text-[#071936]">Service:</strong> {enq.service}</div>
-                      <div><strong className="text-[#071936]">Budget:</strong> {enq.budgetRange}</div>
-                      <div><strong className="text-[#071936]">Timeline:</strong> {enq.timeline}</div>
-                      <div><strong className="text-[#071936]">Submitted:</strong> {new Date(enq.createdAt).toLocaleDateString()}</div>
-                    </div>
-
-                    <p className="text-xs text-[#071936] font-sans bg-white p-3 border border-[#E9E9E4] leading-relaxed">
-                      "{enq.message}"
-                    </p>
-                  </div>
-                ))}
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-serif text-[#071936]">Incoming Client Leads & Enquiries</h3>
+                <span className="text-xs text-[#071936]/60 font-sans">{enquiries.length} Total Enquiries</span>
               </div>
+              
+              {enquiries.length === 0 ? (
+                <div className="py-12 text-center text-xs text-[#071936]/60 space-y-2 border border-dashed border-[#E9E9E4]">
+                  <Mail className="w-8 h-8 text-[#D9A21B] mx-auto opacity-50" />
+                  <p>No client inquiries received yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {enquiries.map((enq) => {
+                    const isRead = enq.status === 'read' || enq.status === 'Read';
+                    return (
+                      <div 
+                        key={enq.id} 
+                        className={`p-5 border space-y-3 transition-colors ${
+                          isRead 
+                            ? 'border-[#E9E9E4] bg-[#FAFAF7]/60' 
+                            : 'border-[#D9A21B]/50 bg-white shadow-sm'
+                        }`}
+                      >
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[#E9E9E4] pb-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-[#071936]">{enq.name}</span>
+                              {enq.organization && <span className="text-xs text-[#071936]/60 font-medium"> ({enq.organization})</span>}
+                              <span className={`inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm ${
+                                isRead 
+                                  ? 'bg-slate-100 text-slate-600 border border-slate-200' 
+                                  : 'bg-[#D9A21B]/20 text-[#071936] border border-[#D9A21B]'
+                              }`}>
+                                {enq.status || 'New'}
+                              </span>
+                            </div>
+                            <p className="text-xs text-[#D9A21B] font-semibold">{enq.email} • {enq.phone || 'No phone'}</p>
+                          </div>
+
+                          <div className="flex items-center gap-2.5">
+                            {/* Quick Mark as Read / Unread toggle */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (enq.id) handleToggleReadStatus(enq.id, enq.status);
+                              }}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold border transition-all cursor-pointer ${
+                                isRead
+                                  ? 'border-slate-300 text-slate-600 hover:bg-slate-100'
+                                  : 'border-[#D9A21B] text-[#071936] bg-[#D9A21B]/15 hover:bg-[#D9A21B]/30'
+                              }`}
+                              title={isRead ? 'Mark as Unread' : 'Mark as Read'}
+                            >
+                              <CheckCheck className="w-3.5 h-3.5" />
+                              <span>{isRead ? 'Mark as Unread' : 'Mark as Read'}</span>
+                            </button>
+
+                            <select
+                              value={enq.status || 'New'}
+                              onChange={(e) => enq.id && handleEnquiryStatusChange(enq.id, e.target.value)}
+                              className="px-3 py-1 bg-white border border-[#E9E9E4] text-xs font-semibold text-[#071936] focus:outline-none focus:border-[#D9A21B] cursor-pointer"
+                            >
+                              <option value="New">New</option>
+                              <option value="read">Read</option>
+                              <option value="Contacted">Contacted</option>
+                              <option value="In Discussion">In Discussion</option>
+                              <option value="Converted">Converted</option>
+                              <option value="Closed">Closed</option>
+                            </select>
+
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (enq.id) handleDeleteEnquiry(enq.id);
+                              }}
+                              className="p-1.5 text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors cursor-pointer"
+                              title="Delete Enquiry"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px] text-[#071936]/70">
+                          <div><strong className="text-[#071936]">Service:</strong> {enq.service}</div>
+                          <div><strong className="text-[#071936]">Budget:</strong> {enq.budgetRange}</div>
+                          <div><strong className="text-[#071936]">Timeline:</strong> {enq.timeline}</div>
+                          <div><strong className="text-[#071936]">Submitted:</strong> {new Date(enq.createdAt).toLocaleDateString()}</div>
+                        </div>
+
+                        <p className="text-xs text-[#071936] font-sans bg-white p-3 border border-[#E9E9E4] leading-relaxed">
+                          "{enq.message}"
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 

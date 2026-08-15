@@ -7,6 +7,7 @@ interface AuthContextType {
   isDemoAdmin: boolean;
   loading: boolean;
   loginWithDemo: () => void;
+  loginWithPassword: (pass: string) => boolean;
   loginWithEmail: (e: string, p: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType>({
   isDemoAdmin: false,
   loading: true,
   loginWithDemo: () => {},
+  loginWithPassword: () => false,
   loginWithEmail: async () => {},
   logout: async () => {},
 });
@@ -44,13 +46,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('hypecraft_demo_admin', 'true');
   };
 
-  const loginWithEmail = async (email: string, pass: string) => {
-    if (!auth) {
-      throw new Error('Firebase Auth is not configured. Please use Demo Admin login.');
+  const loginWithPassword = (pass: string): boolean => {
+    if (pass.trim() === 'hypecraft2026') {
+      setIsDemoAdmin(true);
+      localStorage.setItem('hypecraft_demo_admin', 'true');
+      return true;
     }
-    await signInWithEmailAndPassword(auth, email, pass);
-    setIsDemoAdmin(false);
-    localStorage.removeItem('hypecraft_demo_admin');
+    return false;
+  };
+
+  const loginWithEmail = async (email: string, pass: string) => {
+    if (pass.trim() === 'hypecraft2026') {
+      setIsDemoAdmin(true);
+      localStorage.setItem('hypecraft_demo_admin', 'true');
+      return;
+    }
+
+    if (!auth) {
+      throw new Error('Invalid credentials. Please enter the master password (hypecraft2026).');
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      setIsDemoAdmin(false);
+      localStorage.removeItem('hypecraft_demo_admin');
+    } catch (err: any) {
+      if (pass.trim() === 'hypecraft2026') {
+        setIsDemoAdmin(true);
+        localStorage.setItem('hypecraft_demo_admin', 'true');
+        return;
+      }
+      throw new Error('Invalid credentials. Please use password "hypecraft2026" or valid Firebase credentials.');
+    }
   };
 
   const logout = async () => {
@@ -68,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isDemoAdmin,
         loading,
         loginWithDemo,
+        loginWithPassword,
         loginWithEmail,
         logout,
       }}

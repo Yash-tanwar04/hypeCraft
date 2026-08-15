@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { CTASection } from '../components/CTASection';
-import { fetchTeam } from '../firebase/dataService';
-import { TeamMember } from '../types';
+import { HomePartnersPreview } from '../components/HomePartnersPreview';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { handleImageError } from '../utils/imageUtils';
 
 export const About: React.FC = () => {
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-
-  useEffect(() => {
-    fetchTeam().then(setTeamMembers);
-  }, []);
-
   const principles = [
     {
       title: 'Clarity',
@@ -146,43 +139,7 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* TEAM SECTION */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-12 pb-12">
-        <div className="space-y-3 border-b border-[#E9E9E4] pb-6">
-          <p className="text-[#D9A21B] text-xs font-semibold tracking-[0.25em] uppercase">
-            LEADERSHIP & CONSULTANTS
-          </p>
-          <h2 className="text-3xl md:text-5xl font-serif text-[#071936]">
-            Our <span className="italic text-[#D9A21B]">Team</span>
-          </h2>
-          <p className="text-sm text-[#071936]/70 max-w-xl">
-            A CMS-ready structure powered by experienced practitioners across strategic communications, public relations, and brand architecture.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {teamMembers.map((tm) => (
-            <div key={tm.id || tm.name} className="bg-[#FAFAF7] border border-[#E9E9E4] overflow-hidden">
-              <div className="aspect-4/3 overflow-hidden bg-[#E9E9E4]">
-                <img
-                  src={tm.image}
-                  alt={tm.name}
-                  referrerPolicy="no-referrer"
-                  onError={(e) => handleImageError(e, tm.name, 'team')}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6 space-y-3">
-                <span className="text-[10px] font-semibold text-[#D9A21B] tracking-wider uppercase">
-                  {tm.role}
-                </span>
-                <h3 className="text-xl font-serif text-[#071936]">{tm.name}</h3>
-                <p className="text-xs text-[#071936]/70 leading-relaxed font-sans">{tm.bio}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <HomePartnersPreview />
 
       <CTASection />
 

@@ -49,7 +49,7 @@ export interface Enquiry {
   budgetRange: string;
   timeline: string;
   message: string;
-  status: 'new' | 'contacted' | 'in_discussion' | 'converted' | 'closed';
+  status: 'new' | 'read' | 'contacted' | 'in_discussion' | 'converted' | 'closed' | string;
   createdAt: string;
 }
 

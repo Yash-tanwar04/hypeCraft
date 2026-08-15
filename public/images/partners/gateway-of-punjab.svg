@@ -1,0 +1,19 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" rx="20" fill="#312450" />
+  <path d="M 25 50 Q 100 18 175 50 L 175 150 Q 100 182 25 150 Z" stroke="#F59E0B" stroke-width="2.5" stroke-dasharray="5 3" fill="none" />
+  <g transform="translate(100, 45)" fill="#F59E0B">
+    <ellipse cx="0" cy="0" rx="12" ry="15" />
+    <path d="M -12 2 Q 0 -8 12 2 Q 0 10 -12 2 Z" fill="#D97706" />
+  </g>
+  <text x="100" y="82" text-anchor="middle" fill="#F59E0B" font-family="'Inter', 'Montserrat', sans-serif" font-weight="900" font-size="13" letter-spacing="3">
+    GATEWAY OF
+  </text>
+  <g transform="translate(100, 128)">
+    <text x="2" y="2" text-anchor="middle" fill="#D97706" font-family="'Impact', 'Arial Black', sans-serif" font-size="36" letter-spacing="2.5">
+      PUNJAB
+    </text>
+    <text x="0" y="0" text-anchor="middle" fill="#FFFDF7" font-family="'Impact', 'Arial Black', sans-serif" font-size="36" letter-spacing="2.5">
+      PUNJAB
+    </text>
+  </g>
+</svg>

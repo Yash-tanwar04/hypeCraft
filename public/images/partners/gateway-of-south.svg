@@ -1,0 +1,19 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="90" fill="#FBBF24" />
+  <g transform="translate(30, 32)" fill="#006837" stroke="#006837">
+    <path d="M 65 18 C 32 18 12 40 12 72 C 12 105 35 128 68 128 C 98 128 120 108 120 80 L 80 80 L 80 92 L 105 92 C 102 108 88 118 68 118 C 42 118 25 100 25 72 C 25 45 42 28 65 28 C 85 28 100 40 105 55 L 118 50 C 110 30 90 18 65 18 Z" fill="#006837" stroke-width="0.5" />
+    <circle cx="60" cy="50" r="3" fill="#FBBF24" />
+    <path d="M 45 42 C 55 40 60 50 58 62 C 55 72 48 78 42 75 C 38 72 38 50 45 42 Z" fill="#006837" stroke="#FBBF24" stroke-width="2" />
+  </g>
+  <g transform="translate(85, 108)">
+    <text x="0" y="0" fill="#006837" font-family="'Playfair Display', 'Bodoni MT', serif" font-weight="900" font-size="24">
+      ateway
+    </text>
+    <text x="15" y="18" fill="#006837" font-family="'Playfair Display', serif" font-style="italic" font-weight="700" font-size="15">
+      of
+    </text>
+    <text x="0" y="40" fill="#006837" font-family="'Playfair Display', 'Bodoni MT', serif" font-weight="900" font-size="25">
+      South
+    </text>
+  </g>
+</svg>

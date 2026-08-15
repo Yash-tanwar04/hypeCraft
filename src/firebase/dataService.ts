@@ -318,7 +318,6 @@ export async function updateEnquiryStatus(id: string, status: Enquiry['status'])
   if (isFirebaseConfigured && db) {
     try {
       await updateDoc(doc(db, 'enquiries', id), { status });
-      return;
     } catch (err) {
       handleFirestoreError(err, OperationType.UPDATE, `enquiries/${id}`);
     }
@@ -332,7 +331,6 @@ export async function deleteEnquiry(id: string): Promise<void> {
   if (isFirebaseConfigured && db) {
     try {
       await deleteDoc(doc(db, 'enquiries', id));
-      return;
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, `enquiries/${id}`);
     }
