@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { handleImageError } from '../utils/imageUtils';
+import { ImageUploadField } from '../components/ImageUploadField';
 import {
   fetchProjects,
   fetchInsights,
   fetchEnquiries,
-  fetchTeam,
   createProject,
   updateProject,
   deleteProject,
@@ -16,7 +16,7 @@ import {
   updateEnquiryStatus,
   deleteEnquiry
 } from '../firebase/dataService';
-import { Project, Insight, Enquiry, TeamMember } from '../types';
+import { Project, Insight, Enquiry } from '../types';
 import {
   Lock,
   LogOut,
@@ -31,7 +31,6 @@ import {
   FileText,
   Briefcase,
   Mail,
-  Users,
   LayoutDashboard,
   ShieldCheck,
   X
@@ -147,12 +146,11 @@ export const AdminDashboard: React.FC = () => {
   const { user, isDemoAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'insights' | 'enquiries' | 'team'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'insights' | 'enquiries'>('overview');
   
   const [projects, setProjects] = useState<Project[]>([]);
   const [insights, setInsights] = useState<Insight[]>([]);
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
-  const [team, setTeam] = useState<TeamMember[]>([]);
 
   // Modal / Form state for Project editing
   const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
@@ -171,16 +169,14 @@ export const AdminDashboard: React.FC = () => {
   }, [user, isDemoAdmin, navigate]);
 
   const loadData = async () => {
-    const [p, i, e, t] = await Promise.all([
+    const [p, i, e] = await Promise.all([
       fetchProjects(),
       fetchInsights(),
-      fetchEnquiries(),
-      fetchTeam()
+      fetchEnquiries()
     ]);
     setProjects(p);
     setInsights(i);
     setEnquiries(e);
-    setTeam(t);
   };
 
   const handleLogout = async () => {
@@ -353,17 +349,6 @@ export const AdminDashboard: React.FC = () => {
           >
             <FileText className="w-3.5 h-3.5" /> Insights ({insights.length})
           </button>
-
-          <button
-            onClick={() => setActiveTab('team')}
-            className={`px-4 py-2 text-xs font-semibold tracking-wider uppercase flex items-center gap-2 transition-colors ${
-              activeTab === 'team'
-                ? 'bg-[#071936] text-[#FAFAF7]'
-                : 'bg-[#E9E9E4]/40 text-[#071936]/70 hover:bg-[#E9E9E4]'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" /> Leadership ({team.length})
-          </button>
         </div>
 
         {/* TAB CONTENTS */}
@@ -372,7 +357,7 @@ export const AdminDashboard: React.FC = () => {
           {/* OVERVIEW */}
           {activeTab === 'overview' && (
             <div className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white border border-[#E9E9E4] p-6 space-y-2">
                   <span className="text-[10px] font-semibold tracking-widest uppercase text-[#D9A21B]">NEW ENQUIRIES</span>
                   <p className="text-3xl font-serif text-[#071936]">{enquiries.length}</p>
@@ -384,10 +369,6 @@ export const AdminDashboard: React.FC = () => {
                 <div className="bg-white border border-[#E9E9E4] p-6 space-y-2">
                   <span className="text-[10px] font-semibold tracking-widest uppercase text-[#D9A21B]">PUBLISHED ARTICLES</span>
                   <p className="text-3xl font-serif text-[#071936]">{insights.length}</p>
-                </div>
-                <div className="bg-white border border-[#E9E9E4] p-6 space-y-2">
-                  <span className="text-[10px] font-semibold tracking-widest uppercase text-[#D9A21B]">LEADERSHIP PROFILES</span>
-                  <p className="text-3xl font-serif text-[#071936]">{team.length}</p>
                 </div>
               </div>
 
@@ -719,30 +700,6 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* TEAM TAB */}
-          {activeTab === 'team' && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-serif text-[#071936]">Leadership Profiles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {team.map((m) => (
-                  <div key={m.id || m.name} className="bg-white border border-[#E9E9E4] p-5 space-y-3">
-                    <div className="aspect-4/3 bg-[#E9E9E4]">
-                      <img 
-                        src={m.image} 
-                        alt={m.name} 
-                        onError={(e) => handleImageError(e, m.name, 'team')}
-                        className="w-full h-full object-cover" 
-                      />
-                    </div>
-                    <span className="text-[10px] font-bold text-[#D9A21B] uppercase">{m.role}</span>
-                    <h4 className="text-lg font-serif text-[#071936]">{m.name}</h4>
-                    <p className="text-xs text-[#071936]/70">{m.bio}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
         </div>
       </div>
 
@@ -833,15 +790,12 @@ export const AdminDashboard: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block font-bold uppercase text-[10px] text-[#071936] mb-1">Hero Image URL</label>
-                <input
-                  type="text"
-                  value={editingProject.heroImage || ''}
-                  onChange={(e) => setEditingProject({ ...editingProject, heroImage: e.target.value })}
-                  className="w-full p-2.5 border border-[#E9E9E4]"
-                />
-              </div>
+              <ImageUploadField
+                label="Hero Image"
+                value={editingProject.heroImage || ''}
+                onChange={(val) => setEditingProject({ ...editingProject, heroImage: val })}
+                helpText="Upload a project hero image from your local computer or provide an image URL."
+              />
 
               <div className="flex items-center gap-6 pt-2">
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -949,15 +903,12 @@ export const AdminDashboard: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block font-bold uppercase text-[10px] text-[#071936] mb-1">Cover Image URL</label>
-                <input
-                  type="text"
-                  value={editingInsight.coverImage || ''}
-                  onChange={(e) => setEditingInsight({ ...editingInsight, coverImage: e.target.value })}
-                  className="w-full p-2.5 border border-[#E9E9E4]"
-                />
-              </div>
+              <ImageUploadField
+                label="Cover Image"
+                value={editingInsight.coverImage || ''}
+                onChange={(val) => setEditingInsight({ ...editingInsight, coverImage: val })}
+                helpText="Upload an article cover image from your local computer or provide an image URL."
+              />
 
               <div className="pt-4 flex justify-end gap-3">
                 <button
